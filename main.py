@@ -1,9 +1,11 @@
 import web
 import os
 from weixinInterface import WeixinInterface
+from merryme import merryme
 
 urls = (
     '/weixin', 'WeixinInterface',
+    '/lingjiang', 'merryme',
 )
 
 if __name__ == '__main__':
