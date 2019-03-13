@@ -37,7 +37,12 @@ class WechatGoBack():
             groups = itchat.get_chatrooms(update=True)
             for group in groups:
                 if msg['FromUserName'] == group['UserName']:
-                    p=1
+                    group_name = group['NickName']
+                    group_member = group['MemberCount']
+                    break
+            if not group_name:
+                group_name = u'未命名群聊'
+                
 if __name__ == '__main__':
     test = WechatGoBack()
     test.run()
