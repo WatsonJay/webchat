@@ -62,7 +62,20 @@ class WechatGoBack():
                 msg_content = msg['FileName']
                 msg['Text'](str(msg_content))
                 print('[Attachment/Video/Picture/Recording]: %s' % msg_content)
-                p=1
+        # 位置信息
+        elif msg['Type'] == 'Map':
+            x, y, location = re.search("<location x=\"(.*?)\" y=\"119.262177\".*label=\"(.*?)\".*", msg['OriContent']).group(1,2,3)
+            if location is None:
+                msg_content = r"纬度:" + x.__str__() + ", 经度:" + y.__str__()
+            else:
+                msg_content = r"" + location
+            print('[Map]: %s' % msg_content)
+        # 分享的音乐/文章
+        elif msg['Type'] == 'Sharing':
+            msg_content = msg['Text']
+            msg_link = msg['Url']
+            print('[Sharing]: %s' % msg_content)
+        FACEPACKAGE = msg_content
 
 if __name__ == '__main__':
     test = WechatGoBack()
