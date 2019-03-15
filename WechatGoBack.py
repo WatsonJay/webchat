@@ -100,12 +100,12 @@ class WechatGoBack():
             if len(callBack_msg_id) < 11:
                 itchat.send_file(FACEPACKAGE, toUserName='filehelper')
             else:
-                prompt = '+++' + callBack_msg.get('msg_from') + '撤回了一条消息+++\n' \
-                                '--消息类型：' + callBack_msg.get('msg_type') + '\n' \
-                                '--接收时间：' + callBack_msg.get('msg_receive_time') + '\n' \
-                                '--消息内容：' + callBack_msg.get('msg_content')
+                prompt = u'+++' + callBack_msg.get('msg_from') + u'撤回了一条消息+++\n' \
+                                u'--消息类型：' + callBack_msg.get('msg_type') + '\n' \
+                                u'--接收时间：' + callBack_msg.get('msg_receive_time') + '\n' \
+                                u'--消息内容：' + callBack_msg.get('msg_content')
                 if callBack_msg['msg_type'] == 'Sharing':
-                    prompt += '\n链接：' + callBack_msg.get('msg_link')
+                    prompt += u'\n链接：' + callBack_msg.get('msg_link')
                 itchat.send_msg(prompt, toUserName='filehelper')
                 if callBack_msg['msg_type'] == 'Attachment' or callBack_msg['msg_type'] == "Video" or callBack_msg['msg_type'] == 'Picture' or callBack_msg['msg_type'] == 'Recording':
                     file = '@fil@%s' % (callBack_msg['msg_content'])
