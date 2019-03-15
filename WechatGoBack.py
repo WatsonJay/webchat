@@ -8,9 +8,10 @@ from itchat.content import TEXT, FRIENDS, ATTACHMENT, VIDEO, RECORDING, PICTURE,
 MSGINFO = {}
 FACEPACKAGE = None
 
+
 class WechatGoBack():
     def __init__(self, **kwargs):
-        self.info = 'antiWithdrawal'
+        self.info = 'WechatGoBack'
         self.options = kwargs
     #用于调用的函数
     def run(self):
@@ -57,7 +58,7 @@ class WechatGoBack():
         msg_link = None
         if msg['Type'] == 'Text' or msg['Type'] == 'Friends':
                msg_content = msg['Text']
-               print('[TEXT/FRIENDS]:%S' % msg_content)
+               print('[TEXT/FRIENDS]:%s' % msg_content)
         elif msg['Type'] == 'ATTACHMENT' or msg['Type'] == 'VIDEO' or msg['Type'] == 'RECORDING' or msg['Type'] == 'PICTURE':
                 msg_content = msg['FileName']
                 msg['Text'](str(msg_content))
@@ -76,7 +77,36 @@ class WechatGoBack():
             msg_link = msg['Url']
             print('[Sharing]: %s' % msg_content)
         FACEPACKAGE = msg_content
+        MSGINFO.update(
+            {
+                msg_id:{
+                    "msg_from":msg_from,
+                    "msg_send_time":msg_send_time,
+                    "msg_receive_time":msg_receive_time,
+                    "msg_type":msg['Type'],
+                    "msg_content":msg_content,
+                    "msg_link": msg_link
+                }
+            }
+        )
+        WechatGoBack.checkMsgInfo()
 
+    #监听是否有消息撤回
+    @itchat.msg_register(NOTE, isFriendChat=True, isGroupChat=True, isMpChat=True)
+    def monitorMsg(msg):
+        if u'撤回了一条消息' in msg['Content']:
+            p=1
+
+    @staticmethod
+    def checkMsgInfo():
+        need_del_msgs = []
+        for msg in MSGINFO:
+            msg_time_stay = int(time.time()) - MSGINFO[msg]['msg_send_time']
+            if msg_time_stay > 180:
+                need_del_msgs.append(msg)
+        if need_del_msgs:
+            for msg in need_del_msgs:
+                MSGINFO.pop(msg)
 if __name__ == '__main__':
     test = WechatGoBack()
     test.run()
