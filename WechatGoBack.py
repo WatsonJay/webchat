@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import re
+import sys
 import os
 import time
 import itchat
 from itchat.content import TEXT, FRIENDS, ATTACHMENT, VIDEO, RECORDING, PICTURE, CARD, MAP, SHARING, NOTE
+
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 MSGINFO = {}
 FACEPACKAGE = None
@@ -106,7 +110,7 @@ class WechatGoBack():
                                 u'--消息内容：' + callBack_msg.get('msg_content')
                 if callBack_msg['msg_type'] == 'Sharing':
                     prompt += u'\n链接：' + callBack_msg.get('msg_link')
-                itchat.send_msg(prompt, toUserName='filehelper')
+                itchat.send_msg(str(prompt), toUserName='filehelper')
                 if callBack_msg['msg_type'] == 'Attachment' or callBack_msg['msg_type'] == "Video" or callBack_msg['msg_type'] == 'Picture' or callBack_msg['msg_type'] == 'Recording':
                     file = '@fil@%s' % (callBack_msg['msg_content'])
                     itchat.send(msg=file, toUserName='filehelper')
