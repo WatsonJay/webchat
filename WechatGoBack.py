@@ -30,7 +30,7 @@ class WechatGoBack():
             msg_from_username = msg['ActualUserName']
             friends = itchat.get_friends(update=True)
             for friend in friends:
-                if msg_from_nickname == friend['UserName']:
+                if msg_from_username == friend['UserName']:
                     if friend['RemarkName']:
                         msg_from = friend['RemarkName']
                     else:
@@ -65,7 +65,7 @@ class WechatGoBack():
                 print('[Attachment/Video/Picture/Recording]: %s' % msg_content)
         # 位置信息
         elif msg['Type'] == 'Map':
-            x, y, location = re.search("<location x=\"(.*?)\" y=\"119.262177\".*label=\"(.*?)\".*", msg['OriContent']).group(1,2,3)
+            x, y, location = re.search("<location x=\"(.*?)\" y=\"(.*?)\".*label=\"(.*?)\".*", msg['OriContent']).group(1,2,3)
             if location is None:
                 msg_content = r"纬度:" + x.__str__() + ", 经度:" + y.__str__()
             else:
@@ -95,7 +95,23 @@ class WechatGoBack():
     @itchat.msg_register(NOTE, isFriendChat=True, isGroupChat=True, isMpChat=True)
     def monitorMsg(msg):
         if u'撤回了一条消息' in msg['Content']:
-            p=1
+            callBack_msg_id = re.search("\<msgid\>(.*?)\<\/msgid\>",msg['Content']).group(1)
+            callBack_msg = MSGINFO.get(callBack_msg_id)
+            if len(callBack_msg_id) < 11:
+                itchat.send_file(FACEPACKAGE, toUserName='filehelper')
+            else:
+                prompt = '+++' + callBack_msg.get('msg_from') + '撤回了一条消息+++\n' \
+                                '--消息类型：' + callBack_msg.get('msg_type') + '\n' \
+                                '--接收时间：' + callBack_msg.get('msg_receive_time') + '\n' \
+                                '--消息内容：' + callBack_msg.get('msg_content')
+                if callBack_msg['msg_type'] == 'Sharing':
+                    prompt += '\n链接：' + callBack_msg.get('msg_link')
+                itchat.send_msg(prompt, toUserName='filehelper')
+                if callBack_msg['msg_type'] == 'Attachment' or callBack_msg['msg_type'] == "Video" or callBack_msg['msg_type'] == 'Picture' or callBack_msg['msg_type'] == 'Recording':
+                    file = '@fil@%s' % (callBack_msg['msg_content'])
+                    itchat.send(msg=file, toUserName='filehelper')
+                    os.remove(callBack_msg['msg_content'])
+                MSGINFO.pop(callBack_msg)
 
     @staticmethod
     def checkMsgInfo():
