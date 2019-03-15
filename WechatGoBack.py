@@ -63,7 +63,7 @@ class WechatGoBack():
         if msg['Type'] == 'Text' or msg['Type'] == 'Friends':
                msg_content = msg['Text']
                print('[TEXT/FRIENDS]:%s' % msg_content)
-        elif msg['Type'] == 'ATTACHMENT' or msg['Type'] == 'VIDEO' or msg['Type'] == 'RECORDING' or msg['Type'] == 'PICTURE':
+        elif msg['Type'] == 'Attachment' or msg['Type'] == 'Video' or msg['Type'] == 'Recording' or msg['Type'] == 'Picture':
                 msg_content = msg['FileName']
                 msg['Text'](str(msg_content))
                 print('[Attachment/Video/Picture/Recording]: %s' % msg_content)
