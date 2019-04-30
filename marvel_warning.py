@@ -19,7 +19,7 @@ WARNING_KEYWORDS = [
     u"美队",
     u"tony",
     u"stack",
-    u"复联4",
+    u"复联",
     u"复仇者",
     u"妇联",
     u"黑寡妇",
