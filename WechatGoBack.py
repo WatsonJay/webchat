@@ -62,11 +62,11 @@ class WechatGoBack():
         msg_link = None
         if msg['Type'] == 'Text' or msg['Type'] == 'Friends':
                msg_content = msg['Text']
-               print('[TEXT/FRIENDS]:%s' % msg_content)
+               print('[TEXT/FRIENDS]%s:%s' % (msg_from,msg_content))
         elif msg['Type'] == 'Attachment' or msg['Type'] == 'Video' or msg['Type'] == 'Recording' or msg['Type'] == 'Picture':
                 msg_content = msg['FileName']
                 msg['Text'](str(msg_content))
-                print('[Attachment/Video/Picture/Recording]: %s' % msg_content)
+                print('[Attachment/Video/Picture/Recording]%s: %s' % (msg_from,msg_content))
         # 位置信息
         elif msg['Type'] == 'Map':
             x, y, location = re.search("<location x=\"(.*?)\" y=\"(.*?)\".*label=\"(.*?)\".*", msg['OriContent']).group(1,2,3)
@@ -74,12 +74,12 @@ class WechatGoBack():
                 msg_content = r"纬度:" + x.__str__() + ", 经度:" + y.__str__()
             else:
                 msg_content = r"" + location
-            print('[Map]: %s' % msg_content)
+            print('[Map]%s: %s' % (msg_from,msg_content))
         # 分享的音乐/文章
         elif msg['Type'] == 'Sharing':
             msg_content = msg['Text']
             msg_link = msg['Url']
-            print('[Sharing]: %s' % msg_content)
+            print('[Sharing]%s: %s' % (msg_from,msg_content))
         FACEPACKAGE = msg_content
         MSGINFO.update(
             {
@@ -115,7 +115,7 @@ class WechatGoBack():
                     file = '@fil@%s' % (callBack_msg['msg_content'])
                     itchat.send(msg=file, toUserName='filehelper')
                     os.remove(callBack_msg['msg_content'])
-                MSGINFO.pop(callBack_msg)
+                MSGINFO.pop(callBack_msg_id)
 
     @staticmethod
     def checkMsgInfo():
