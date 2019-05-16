@@ -3,6 +3,7 @@ import sys
 
 import itchat
 import jieba
+from itchat.content import TEXT, FRIENDS, ATTACHMENT, VIDEO, RECORDING, PICTURE, CARD, MAP, SHARING, NOTE
 
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
@@ -38,12 +39,16 @@ def check_msg(msg):
             return True
     return False
 
-@itchat.msg_register(itchat.content.TEXT)
+@itchat.msg_register([TEXT, PICTURE, FRIENDS, CARD, MAP, SHARING, RECORDING, ATTACHMENT, VIDEO, NOTE], isFriendChat=True, isGroupChat=True, isMpChat=True)
 def text_replay(msg):
-    if check_msg(msg.text):
-            if msg['FromUserName'] == u"池女王带我们玩":
-                print(u"WARNING! 这条消息涉嫌剧透,现已自动屏蔽 FROM：{msg.user.NickName}")
-                return WARNING_REPLY
+    if 'ActualNickName' in msg:
+        msg_from_nickname = msg['ActualNickName']
+        groups = itchat.get_chatrooms(update=True)
+        for group in groups:
+            if msg['FromUserName'] == group['UserName'] and group['NickName'] == '谁是谁的谁':
+                if check_msg(msg.text):
+                    print(u"WARNING! 这条消息涉嫌剧透,现已自动屏蔽 FROM：{}".format(group['NickName']+'的'+msg_from_nickname))
+                    # return WARNING_REPLY
 
 if __name__ == '__main__':
     itchat.auto_login(hotReload=True)

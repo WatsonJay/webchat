@@ -64,7 +64,7 @@ class WeixinInterface:
                     content = xml.find("Content").text  # 获得用户所输入的内容
                     if content[0:4] == u"自我介绍":
                         return self.render.reply_text(fromUser, toUser, int(time.time()),
-                                                      '我叫小小肥仔，我被我的主人扔在这里，我会陪你聊天，还会看图认脸看地图等等，把我抱走吧，对了，我家在www.nothingistrue.top哦')
+                                                      '我叫小肥肥，我被我的主人扔在这里，我会陪你聊天，还会看图认脸看地图等等，把我抱走吧，对了，我家在www.nothingistrue.top哦')
                     elif content[0:2] == u"音乐":
                         musicTitle = content[2:].encode("utf-8")
                         data=music(musicTitle)
